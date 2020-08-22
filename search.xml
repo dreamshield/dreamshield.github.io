@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>单例模式总结</title>
+      <link href="/2020/08/22/Summary-of-Singleton-Pattern/"/>
+      <url>/2020/08/22/Summary-of-Singleton-Pattern/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>写作思路:</p><ul><li>文章目的: 介绍单例模式各种实现方式涉及到的问题点</li><li>文章思路: 单例模式定义 -&gt; 各种实现方式与问题</li></ul></blockquote><p>单例模式是大家平时经常在工程中见到与使用的一种设计模式。本文的目的是介绍单例模式的各种实现方式以及每种实现方式涉及到的问题点。首先我们看下单例模式的定义。</p><h2 id="模式定义"><a href="#模式定义" class="headerlink" title="模式定义"></a>模式定义</h2><p>单例模式：保证一个类仅有一个示例，并提供一个访问它的全局访问点。</p><blockquote><p>通常我们可以让一个全局变量使得一个变量被访问，但它不能防止你实例化多个对象。一个最好的方法就是，让类自身负责保存它的唯一实例。这个类可以保证没有其它实例能够被创建，并且它可以提供一个访问该实例的方法。</p></blockquote><p>单例模式的uml图如下所示：<br><img src="/img/2020/8/singleton.png" alt="图1-单例模式" width="60%"></p><h2 id="模式实现"><a href="#模式实现" class="headerlink" title="模式实现"></a>模式实现</h2><p>考虑到不同的使用场景与环境，单例模式的实现也是多种多样，需要我们根据具体的场景进行相应的选择。接下来就对不同场景下单例模式的实现以及每种实现方式的存在的问题进行介绍。</p><h3 id="方式1：单线程"><a href="#方式1：单线程" class="headerlink" title="方式1：单线程"></a>方式1：单线程</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123; <span class="comment">// 语句①</span></span><br><span class="line">            instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>该方式实现简单明了，但是只能用在单线程的环境中，如果有多个线程同时访问getInstance方法，并且同时执行语句①，由于语句①形成一个check-then-act操作，他不是一个原子操作。这时每个线程的if判断结果均为true，那么将产生多个Singleton实例，单例模式实效。为了实现线程安全，很自然的想到使用synchronized关键字。也就是我们下面实现的多线程版本一。</p><h3 id="方式2：多线程-耗性能版"><a href="#方式2：多线程-耗性能版" class="headerlink" title="方式2：多线程(耗性能版)"></a>方式2：多线程(耗性能版)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonMultiThread</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingletonMultiThread instance;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingletonMultiThread</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingletonMultiThread <span class="title">getInstance</span><span class="params">()</span> </span>&#123; <span class="comment">// 语句①</span></span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> SingletonMultiThread();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>该方式通过synchronized关键字，避免了多线程环境下线程不安全的问题，保证了单例模式的正确性。但于此同时每一次对getInstance的访问都要加锁。由于加锁访问对性能损耗是极大的，因此虽然该模式保证了单例模式在多线程环境下的线程安全，但也是以降低性能为代价换取的。为了减少加锁性能的开销，人们想到了一个聪明的方法，只有在instance为null的时候才进行加锁操作。就是下面的实现方式DCL(Double Check Lock)版本。</p><h3 id="方式3：多线程-DCL-非安全发布版"><a href="#方式3：多线程-DCL-非安全发布版" class="headerlink" title="方式3：多线程(DCL-非安全发布版)"></a>方式3：多线程(DCL-非安全发布版)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IncorrectDCLSingleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> IncorrectDCLSingleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IncorrectDCLSingleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IncorrectDCLSingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123; <span class="comment">//操作①</span></span><br><span class="line">            <span class="keyword">synchronized</span> (IncorrectDCLSingleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123; <span class="comment">//操作②</span></span><br><span class="line">                    instance = <span class="keyword">new</span> IncorrectDCLSingleton(); <span class="comment">//操作③</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>初看上面的代码既避免了锁的开销又保证了线程安全：一个线程T1执行到操作①的时候发现instance为null(第1次check)，而此时另一个线程T2可能恰好刚执行完操作③而使instance不为null；接着T1获得锁而执行临界区的代码，再一次判断instance值是否为null(第2次check)，此时由于该线程是在临界区内读取共享变量instance，因此T1此时发现instance值已经不为null，于是T1不会执行操作③(创建实例)，从而避免了再次创建一个新实例。当然，仅从可见性的角度分析结论确实如此。但是，在一些情形下为了确保线程安全光考虑可见性是不够的，还要考虑重排序对线程安全的影响。</p><p>我们知道操作③可以分解为如下伪代码所示的几个独立操作：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">objRef &#x3D; allocate(IncorrectDCLSingleton.class); &#x2F;&#x2F; 子操作①：分配对象所需的存储空间</span><br><span class="line">invokeConstructor(objRef); &#x2F;&#x2F; 子操作②：初始化objRef引用的对象</span><br><span class="line">instance &#x3D; objRef; &#x2F;&#x2F; 子操作③：将对象引用写入共享变量</span><br></pre></td></tr></table></figure><p>根据锁的重排序规则，临界区内的操作可以在临界区内进行重排序。因此，JIT编译器可能将上述的子操作重排序为：子操作① -&gt; 子操作③ -&gt; 子操作②，记在初始化对象之前将对象的引用写入实例变量instance。由于锁对有序性的保障是有条件的，而操作①(第一次检查)读取instance变量的时候并没有加锁，因此上述排序对操作①的执行线程是有影响的：该线程可能看到一个为初始化(或未初始化完毕)的实例，即变量instance的值不为null，但是该变量所引用的对象中的某些实例变量的值可能仍然是默认值，而不是构造器中设置的初始值。也就是说，一个线程在执行操作①的时候发现instance不为null，于是该线程就直接返回这个instance变量所引用的实例，而这个实例可能未初始化完毕，这就可能导致程序错误。通过上面的分析，解决方法也就不难想到：只需要将instance变量采用volatile修饰即可。详见单例实现方式4-多线程DCL版。</p><h3 id="方式4：多线程-DCL版"><a href="#方式4：多线程-DCL版" class="headerlink" title="方式4：多线程(DCL版)"></a>方式4：多线程(DCL版)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DCLSingleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> DCLSingleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DCLSingleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DCLSingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123; <span class="comment">//操作①</span></span><br><span class="line">            <span class="keyword">synchronized</span> (DCLSingleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123; <span class="comment">//操作②</span></span><br><span class="line">                    instance = <span class="keyword">new</span> DCLSingleton(); <span class="comment">//操作③</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>该方式实际上是利用了关键字volatile的一下两个特性：</p><ul><li>保证可见性：一个线程通过执行操作③修改了instance变量的值，其它线程可以读取到相应的值(通过执行操作①)。</li><li>保障有序性：由于volatile能够禁止volatile变量写操作与该操作之前的任何读、写操作进行重排序，因此用volatile修饰instance相当于禁止JIT编译器以及处理器将子操作②(对对象进行初始化子操作)重排序到子操作③(将对象引用写入共享变量的写操作)，这保障了一个线程读取到instance变量所引用的实例时该实例已经初始化完毕。</li></ul><h3 id="方式5：内部类"><a href="#方式5：内部类" class="headerlink" title="方式5：内部类"></a>方式5：内部类</h3><p>考虑到DCL实现方式容易出错，还有一种同样可以实现延迟加载同时保证线程安全的简单方式，即基于内部类的实现方式，具体如下所示：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InnerClassSingleton</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">InnerClassSingleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> InnerClassSingleton INSTANCE = <span class="keyword">new</span> InnerClassSingleton();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> InnerClassSingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> InstanceHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> do...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        InnerClassSingleton.getInstance().doSomething();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>由于类的静态变量被初次访问的时候会触发Java虚拟机对该类进行初始化，即该类的静态变量值会变为其初始值而不是默认值。</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1] <a href="https://book.douban.com/subject/27034721//">Java多线程编程实战指南-核心篇</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Java中的volatile与final</title>
       <link href="/2019/05/30/Volatile-and-Final-in-Java/"/>
       <url>/2019/05/30/Volatile-and-Final-in-Java/</url>
@@ -13,16 +32,10 @@
       
       <categories>
           
-          <category> Java </category>
+          <category> Java基础 </category>
           
       </categories>
       
-      
-        <tags>
-            
-            <tag> Java基础 </tag>
-            
-        </tags>
       
     </entry>
     
@@ -38,16 +51,10 @@
       
       <categories>
           
-          <category> Java </category>
+          <category> Java基础 </category>
           
       </categories>
       
-      
-        <tags>
-            
-            <tag> Java基础 </tag>
-            
-        </tags>
       
     </entry>
     
@@ -63,16 +70,10 @@
       
       <categories>
           
-          <category> Java </category>
+          <category> Java基础 </category>
           
       </categories>
       
-      
-        <tags>
-            
-            <tag> Java基础 </tag>
-            
-        </tags>
       
     </entry>
     
@@ -88,16 +89,10 @@
       
       <categories>
           
-          <category> Java </category>
+          <category> Java基础 </category>
           
       </categories>
       
-      
-        <tags>
-            
-            <tag> Java基础 </tag>
-            
-        </tags>
       
     </entry>
     
@@ -113,16 +108,10 @@
       
       <categories>
           
-          <category> Java </category>
+          <category> Java基础 </category>
           
       </categories>
       
-      
-        <tags>
-            
-            <tag> Java基础 </tag>
-            
-        </tags>
       
     </entry>
     
@@ -143,14 +132,6 @@
       </categories>
       
       
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 数据结构 </tag>
-            
-        </tags>
-      
     </entry>
     
     
@@ -170,15 +151,22 @@
       </categories>
       
       
-        <tags>
-            
-            <tag> MySQL </tag>
-            
-        </tags>
-      
     </entry>
     
     
   
+  
+    
+    
+    <entry>
+      <title>关于我</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
+      
+        <content type="html"><![CDATA[<p>我出生在辽宁一个平静祥和的小镇。2007年离开家乡，步入大学，学习通信工程专业。2011年本科毕业，来到了天府之国——成都，攻读信号与信息处理专业研究生。2014年6月至2015年3月，就职于某事业单位。2015年3月低，从事业单位辞职，加入某互联网公司。很长一段时间，我迷失了自己，过着那种看似安稳平静的生活。然而现在，我清楚地明白：这种生活不是我想要的，也不适合我。所以，我要重拾我曾遗忘在角落里的梦，为梦想而奋斗！</p><p>编程语言以Java和Go为主，主要从事后端开发。目标成为一名优秀的架构师。我的性格比较安静，特别喜欢在台灯下静静看书的感觉。喜欢跑步，享受那种忘我融于自然的状态。</p><h2 id="喜欢的台词"><a href="#喜欢的台词" class="headerlink" title="喜欢的台词"></a>喜欢的台词</h2><p><strong>sometimes, you do something but not knowing its meaning</strong></p><p><strong>just run</strong></p><p><strong>run for what</strong></p><p><strong>for dream, for life, for everyone you love, for something others</strong></p><p><strong>if you do not run, you will never know what a person you are</strong></p><p><strong>when we are tired, heading home</strong></p><p><strong>when we are hungry, researching something to eat.</strong></p><p><strong>A simple person leads a simple life.</strong></p><p><strong>Why should we always pretend to be clever?</strong></p><p><strong>Do yourself.</strong></p><p><strong>You got a dream, you gotta protect it. People can’t do something themselves, they wanna tell you you can’t do it. If you want something, go get it. Period.</strong></p><h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><ul><li>Github: <a href="https://github.com/dreamshield/" title="eric" target="_blank">@EricZhang</a></li><li>Email: <a href="Mailto:root@ericvip.com">root@ericvip.com</a></li></ul>]]></content>
+      
+    </entry>
+    
+    
   
 </search>

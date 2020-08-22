@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Java8特性-Lambda表达式 | EricZhang</title>
+  <meta name="author" content="EricZhang">
+  
+  <meta name="description" content="Eric&#39;s World | Java | Go | 后端开发 | Linux | C | 架构师 | 程序员">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Java8特性-Lambda表达式"/>
+  <meta property="og:site_name" content="EricZhang"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="EricZhang" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">EricZhang</a></h1>
+  <h2><a href="/">未来有信心，长期有耐心。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">归档</a></li>
+    
+      <li><a href="/about">关于我</a></li>
+    
+    <li> <a href="/atom.xml">RSS</a> </li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2019-03-03T01:15:32.000Z"><a href="/2019/03/03/Characteristic-of-Java8-Lambda/">2019-03-03</a></time>
+      
+      
+  
+    <h1 class="title">Java8特性-Lambda表达式</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><ul>
+<li>行为参数化</li>
+<li>函数式编程</li>
+<li>流处理</li>
+</ul>
+<h2 id="什么是函数式编程"><a href="#什么是函数式编程" class="headerlink" title="什么是函数式编程"></a>什么是函数式编程</h2><ul>
+<li>没有共享的可变数据，将方法和函数即代码传递给其他方法的能力是函数式编程范式的基石。</li>
+<li>编写把函数作为一等值传递的程序。</li>
+</ul>
+<h2 id="Lambda表达式"><a href="#Lambda表达式" class="headerlink" title="Lambda表达式"></a>Lambda表达式</h2><p>为什么叫Lambda表达式(为什么用字母λ)：源于计算机科学家Alonzo Church，后来带参数变量的表达式就称为Lambda表达式。<br>理论上来说，你在Java 8之前做不了的事情，Lambda也做不了。但是，现在你用不着再用匿名类写一堆笨重的代码。Lambda表达式本身的类型：函数式接口。</p>
+<a id="more"></a>
+
+<p><strong>函数式接口</strong>：只定义一个抽象方法的接口，用作Lambda表达式的类型。</p>
+<blockquote>
+<p>这里注意强调的是抽象方法，并不包括static、default方法</p>
+</blockquote>
+<h3 id="Lambda表达式形式"><a href="#Lambda表达式形式" class="headerlink" title="Lambda表达式形式"></a>Lambda表达式形式</h3><ul>
+<li>(parameters) -&gt; expression</li>
+<li>(parameters) -&gt; { statements; }</li>
+</ul>
+<blockquote>
+<ul>
+<li><strong><em>Lambda表达转换的关键点：抽象方法的签名要与Lambda表达式的签名相对应。</em></strong><br>举例：(T,U) -&gt; R的表达方式展示了应当如何思考一个函数描述符。这里它代表一个函数，具有两个参数，分别为泛型入参 T和U，返回类型为R。</li>
+<li>如果Lambda表达式抛出一个异常，那么抽象方法所声明的throws语句也必须与之匹配。</li>
+<li>如果一个Lambda的主体是一个语句表达式，它就和一个返回void的函数描述符兼容（当然需要参数列表也兼容）。</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="comment">// ① Predicate返回了一个boolean</span></span><br><span class="line">Predicate&lt;String&gt; a = s -&gt; list.add(s);</span><br><span class="line"><span class="comment">// ② Consumer返回了一个void</span></span><br><span class="line">Consumer&lt;String&gt; b = s -&gt; list.add(s);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 语句①与语句②分别等价于以下语句③与④，且下面的语句更容易理解</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 语句③ Predicate返回了一个boolean</span></span><br><span class="line">Predicate&lt;String&gt; c = s -&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> list.add(s);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 语句④ Consumer返回了一个void，函数体中只有表达式没有返回值</span></span><br><span class="line">Consumer&lt;String&gt; d = s -&gt; &#123;</span><br><span class="line">    list.add(s);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="类型检查"><a href="#类型检查" class="headerlink" title="类型检查"></a>类型检查</h3><ul>
+<li>Lambda的类型是从使用Lambda的上下文推断出来的。上下文（比如，接受它传递的方法的参数，或接受它的值的局部变量）中Lambda表达式需要的类型称为目标类型。</li>
+<li>同一个Lambda表达式可以与不同的函数式接口联系起来，只要它们的抽象方法签名能够兼容。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Callable&lt;Integer&gt; c = () -&gt; <span class="number">42</span>; </span><br><span class="line">PrivilegedAction&lt;Integer&gt; p = () -&gt; <span class="number">42</span>;</span><br></pre></td></tr></table></figure></li>
+<li>如果一个Lambda的主体是一个语句表达式，它就和一个返回void的函数描述符兼容（当然需要参数列表也兼容）。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Predicate返回了一个boolean</span></span><br><span class="line">Predicate&lt;String&gt; p = s -&gt; list.add(s);</span><br><span class="line"><span class="comment">// Consumer返回了一个void</span></span><br><span class="line">Consumer&lt;String&gt; b = s -&gt; list.add(s);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="使用局部变量"><a href="#使用局部变量" class="headerlink" title="使用局部变量"></a>使用局部变量</h3><ul>
+<li>Lambda可以没有限制地捕获（也就是在其主体中引用）实例变量和静态变量。<blockquote>
+<p>注：捕获实例变量可以被看作捕获最终局部变量this。</p>
+</blockquote>
+</li>
+<li>局部变量必须显式声明为final，或事实上是final。换句话说，Lambda表达式只能捕获指派给它们的局部变量一次。<blockquote>
+<p><strong>对局部变量访问限制的原因</strong></p>
+<ul>
+<li>第一，实例变量和局部变量背后的实现有一个关键不同。实例变量都存储在堆中，而局部变量则保存在栈上。如果Lambda可以直接访问局部变量，而且Lambda是在一个线程中使用的，则使用Lambda的线程，可能会在分配该变量的线 程将这个变量收回之后，去访问该变量。因此，Java在访问自由局部变量时，实际上是在访问它的副本，而不是访问原始变量。如果局部变量仅仅赋值一次那就没有什么区别了——因此就有了这个限制。</li>
+<li>第二，这一限制不鼓励你使用改变外部变量的典型命令式编程模式(这种模式会阻碍很容易做到的并行处理)。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h3 id="Lambda表达式与闭包"><a href="#Lambda表达式与闭包" class="headerlink" title="Lambda表达式与闭包"></a>Lambda表达式与闭包</h3><p>闭包就是一个函数的实例，且它可以无限制地访问那个函数的非本地变量。例如，闭包可以作为参数传递给另一个函数。它也可以访问和修改其作用域之外的变量。现在，Java8的Lambda和匿名类可以做类似于闭包的事情：**<em>它们可以作为参数传递给方法，并且可以访问其作用域之外的变量。但有一个限制：它们不能修改定义Lambda的方法的局部变量的内容。这些变量必须是final，或事实上是final的。**</em>可以认为Lambda是对值封闭，而不是对变量封闭。</p>
+<h2 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h2><p>方法引用让你可以重复使用现有的方法定义，并像Lambda一样传递它们。**<em>你可以把方法引用看作针对仅仅涉及单一方法的Lambda的语法糖，因为你表达同样的事情 时要写的代码更少了。**</em></p>
+<ul>
+<li>指向静态方法的引用<img src="/img/2019/4/method_refer1.png" width="50%"></li>
+<li>指向任意类型实例方法的方法引用<img src="/img/2019/4/method_refer2.png" width="50%"></li>
+<li>指向现有对象的实例方法的方法引用<img src="/img/2019/4/method_refer3.png" width="50%"></li>
+<li>构造函数引用<ul>
+<li>实例构造器：Class::new<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BiFunction&lt;String, Integer, Apple&gt; c = Apple::<span class="keyword">new</span>;</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line">BiFunction&lt;String, Integer, Apple&gt; c = (color, weight) -&gt; <span class="keyword">new</span> Apple(color, weight);</span><br></pre></td></tr></table></figure></li>
+<li>数据构造器：int[]::new，等价于lambda表达式(int x) -&gt; new int[x]</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p>[1] Java8实战<br>[2] Java核心技术卷一(第10版)</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Java/">Java</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Java基础/">Java基础</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:ericvip.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java/">Java</a><small>5</small></li>
+  
+    <li><a href="/categories/数据库/">数据库</a><small>1</small></li>
+  
+    <li><a href="/categories/算法与数据结构/">算法与数据结构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/Java基础/">Java基础</a><small>5</small></li>
+  
+    <li><a href="/tags/MySQL/">MySQL</a><small>1</small></li>
+  
+    <li><a href="/tags/数据结构/">数据结构</a><small>1</small></li>
+  
+    <li><a href="/tags/算法/">算法</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="widget tag">
+    <h2 class="title">联系方式</h2>
+    <ul class="entry">
+        <li>Email: <a href="Mailto:root@ericvip.com">root@ericvip.com</a></li>
+        <li>Github: <a href="https://github.com/dreamshield/" title="eric" target="_blank">@EricZhang</a></li>
+    </ul>
+</div>
+
+  <div class="widget tag">
+    <h2 class="title">Friends</h2>
+    <ul class="entry">
+        <li><a href="http://armsword.com/" target="_blank" title="armsword">若飞</a></li>
+    </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 EricZhang
+  
+  
+    |
+<script type="text/javascript" src="https://s96.cnzz.com/z_stat.php?id=1277384850&web_id=1277384850"></script>
+
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

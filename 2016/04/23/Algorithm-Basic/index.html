@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>算法基础 | EricZhang</title>
+  <meta name="author" content="EricZhang">
+  
+  <meta name="description" content="Eric&#39;s World | Java | Go | 后端开发 | Linux | C | 架构师 | 程序员">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="算法基础"/>
+  <meta property="og:site_name" content="EricZhang"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="EricZhang" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">EricZhang</a></h1>
+  <h2><a href="/">未来有信心，长期有耐心。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">归档</a></li>
+    
+      <li><a href="/about">关于我</a></li>
+    
+    <li> <a href="/atom.xml">RSS</a> </li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-04-23T06:31:31.000Z"><a href="/2016/04/23/Algorithm-Basic/">2016-04-23</a></time>
+      
+      
+  
+    <h1 class="title">算法基础</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="分析算法"><a href="#分析算法" class="headerlink" title="分析算法"></a>分析算法</h2><p>分析算法的结果意味着预测算法需要的资源。虽然我们有时主要关心像内存、通信带宽或计算机硬件这些资源，但通常我们想度量的是计算时间。一般来说，通过分析求解某个问题的几种候选算法，我们可以选出一种最有效的算法。这种分析可能指出不止一个可行的候选算法，但是在这个过程中，我们往往可以抛弃几个较差的算法。一般来说，算法需要的时间与输入的规模同步增长，所以通常把一个程序的运行时间描述成其输入规模的函数。</p>
+<ul>
+<li>输入规模：输入规模的最佳概念依赖于研究的问题。对于许多问题，最自然的度量是输入中的项数，有时用两个数来描述一个算法的输入规模更为合适，如基于图的算法。</li>
+<li>运行时间：一个算法在特定输入的运行时间是指执行的基本操作数或步数。其中步数，采用以下观点，执行每一行代码需要常量执行时间。<a id="more"></a></li>
+</ul>
+<p>通常用来评判算法性能的三种情况是: 最佳情况、平均情况和最坏情况。任何一种算法的最佳情况的表现都没有太大的差异，分析算法平均情况下的性能往往没有那么容易，甚至我们很难去界定那种情况是平均情况(但某些情况下，我们需要分析平均情况，比如随机算法中的快速排序算法，它使用了概率论的理论基础，从而有效地保证了平均情况下的准确性)，最坏情况可以告诉我们算法性能的上限。分析一个算法的最坏情况可以保证在任何情况下此算法的表现都不会比最坏情况差，而且其他情况一定比最坏的情况要好。</p>
+<h2 id="O表示法"><a href="#O表示法" class="headerlink" title="O表示法"></a>O表示法</h2><p>这是表示算法性能最为常用的方式之一。在一定的条件因素下，O表示法指明一个函数的上限。如果g(n)是f(n)的一个上限值，那么对于常数c，我们总可以找到一个n(称为n0)，当n&gt;=n0是，f(n) &lt;= g(n)。</p>
+<h3 id="O表示法的简单规则"><a href="#O表示法的简单规则" class="headerlink" title="O表示法的简单规则"></a>O表示法的简单规则</h3><ul>
+<li>常数项用O(1)表示</li>
+<li>常量因子往往被忽略</li>
+<li>加法运算取最大值</li>
+<li>乘法结构不需要改变</li>
+</ul>
+<blockquote>
+<p>算法的复杂度O(n)并没有具体表明运行此算法实际需要多少时间。话句话说，一个增长率低的算法并不意味着它会消耗更小的运行时间。事实上，算法的复杂度并没有具体的计量单位，它只是表明当计算数据量的大小变化时，将如何影响算法消耗的资源。</p>
+</blockquote>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1] <a target="_blank" rel="noopener" href="https://book.douban.com/subject/20432061/">算法导论</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/算法与数据结构/">算法与数据结构</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/算法/">算法</a>, <a href="/tags/数据结构/">数据结构</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:ericvip.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java/">Java</a><small>5</small></li>
+  
+    <li><a href="/categories/数据库/">数据库</a><small>1</small></li>
+  
+    <li><a href="/categories/算法与数据结构/">算法与数据结构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/Java基础/">Java基础</a><small>5</small></li>
+  
+    <li><a href="/tags/MySQL/">MySQL</a><small>1</small></li>
+  
+    <li><a href="/tags/数据结构/">数据结构</a><small>1</small></li>
+  
+    <li><a href="/tags/算法/">算法</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="widget tag">
+    <h2 class="title">联系方式</h2>
+    <ul class="entry">
+        <li>Email: <a href="Mailto:root@ericvip.com">root@ericvip.com</a></li>
+        <li>Github: <a href="https://github.com/dreamshield/" title="eric" target="_blank">@EricZhang</a></li>
+    </ul>
+</div>
+
+  <div class="widget tag">
+    <h2 class="title">Friends</h2>
+    <ul class="entry">
+        <li><a href="http://armsword.com/" target="_blank" title="armsword">若飞</a></li>
+    </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 EricZhang
+  
+  
+    |
+<script type="text/javascript" src="https://s96.cnzz.com/z_stat.php?id=1277384850&web_id=1277384850"></script>
+
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

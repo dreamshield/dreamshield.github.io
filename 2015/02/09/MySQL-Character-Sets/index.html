@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL字符集的理解 | EricZhang</title>
+  <meta name="author" content="EricZhang">
+  
+  <meta name="description" content="Eric&#39;s World | Java | Go | 后端开发 | Linux | C | 架构师 | 程序员">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="MySQL字符集的理解"/>
+  <meta property="og:site_name" content="EricZhang"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="EricZhang" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">EricZhang</a></h1>
+  <h2><a href="/">未来有信心，长期有耐心。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">归档</a></li>
+    
+      <li><a href="/about">关于我</a></li>
+    
+    <li> <a href="/atom.xml">RSS</a> </li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-02-09T02:34:20.000Z"><a href="/2015/02/09/MySQL-Character-Sets/">2015-02-09</a></time>
+      
+      
+  
+    <h1 class="title">MySQL字符集的理解</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>字符(symbles)：人类语言的最小单位(不知道这样理解对不对，语言学的朋友请更正)</li>
+<li>编码(encoding)：对给定的字符进行赋值或者说是建立一种映射关系。可以理解为一个过程,也可以理解为一个结果。例如：给定字符’A’和B’，我们给字符’A’和’B’各赋一个值，即有如下对应关系’A’=&gt;0, ‘B’=&gt;1。我们就说0是字符’A’的编码，1是字符’B’的编码。</li>
+<li>字符集(character set)：字符和编码的集合(映射关系的集合)称为字符集。比如字符’A’和’B’同他们对应的编码组成的集合就是一个字符集。{‘A’=&gt;0, ‘B’=&gt;1}</li>
+<li>校对规则(collation)：字符集中各个字符之间的比较与排列次序和方法。若果我们想比较字符串”A”和字符串”B”的大小。最简单的方法就是比较字符’A’和’字符B’对应编码的大小。比如上面的字符’B’的编码1大于字符’A’的编码0，我们就说字符串”A”大于字符串”B”。这中是最简单的一种校对规则，被称之为binary collation。其他复杂的校对规则原理与其类似，比如不去分字符的大小写等。<br>注：每一个校对规则都对应者一个字符集，而每个字符集可以对应多个校对规则。<a id="more"></a></li>
+</ul>
+<h2 id="MySQL中的字符集"><a href="#MySQL中的字符集" class="headerlink" title="MySQL中的字符集"></a>MySQL中的字符集</h2><p>MySQL中支持四个层次的字符集(MySQL4.1之后)分别是：服务器级(server)、数据库级(database)、表级(table)和连接级(connection)。当然还有一个特殊的字符串的字符集和校对规则。在MySQL查看当前字符集的设置情况可以使用<code>SHOW VARIABLES LIKE &#39;character%&#39;;</code>命令，如下图所示:<br><img src="/img/2018/10/mysql_character_set.png" alt="MySQL字符集"><br><strong>各个系统变量的含义:</strong></p>
+<ul>
+<li>character_set_client: 客户端数据传传过来使用的字符集</li>
+<li>character_set_connection: 连接客户端和服务器之间接口使用的字符集</li>
+<li>character_set_database: 当前选中数据库中使用的字符集</li>
+<li>character_set_filesystem: 文件系统使用的字符集</li>
+<li>character_set_results: 服务器返回给客户端结果的字符集</li>
+<li>character_set_server: 服务器内部操作的字符集</li>
+<li>character_set_system: 系统元数据(字段名等)使用的字符集</li>
+</ul>
+<h2 id="MySQL各个层次字符集作用规则"><a href="#MySQL各个层次字符集作用规则" class="headerlink" title="MySQL各个层次字符集作用规则"></a>MySQL各个层次字符集作用规则</h2><p><strong>服务器字符集和校对</strong></p>
+<ul>
+<li>当服务器启动时根据有效的选项设置</li>
+<li>根据运行时设置<br>注: 启动mysqld时，根据使用的初始选项设置来确定服务器字符集和校对规则。可以使用–default-character-set设置字符集，并且可以在字符集后面为 校对规则添加–default-collation。如果没有指定一个字符集，那就与–default-character-set设置的值相同。如果你仅指定了一个字符集（例如，latin1），但是没有指定一个 校对规则，那就与–default-charset设置的值相同。</li>
+</ul>
+<p><strong>数据库字符集和校对</strong></p>
+<ul>
+<li>如果指定了CHARACTER SET X和COLLATE Y，那么采用字符集X和校对规则Y。</li>
+<li>如果指定了CHARACTER SET X而没有指定COLLATE Y，那么采用CHARACTER SET X和CHARACTER SET X的默认校对规则。</li>
+<li>如果指定了COLLATE Y而没有指定CHARACTER SET X，那么采用COLLATE Y相关的字符集和COLLATE Y校对规则。</li>
+<li>否则，采用服务器字符集和服务器校对规则。</li>
+</ul>
+<p><strong>表字符集和校对</strong></p>
+<ul>
+<li>如果指定了CHARACTER SET X和COLLATE Y，那么采用CHARACTER SET X和COLLATE Y。</li>
+<li>如果指定了CHARACTER SET X而没有指定COLLATE Y，那么采用CHARACTER SET X和CHARACTER SET X的默认校对规则。</li>
+<li>如果指定了COLLATE Y而没有指定CHARACTER SET X，那么采用COLLATE Y相关的字符集和COLLATE Y校对规则。</li>
+<li>否则，采用服务器字符集和服务器校对规则。</li>
+</ul>
+<p><strong>列字符集和校对</strong></p>
+<ul>
+<li>如果指定了CHARACTER SET X和COLLATE Y，那么采用CHARACTER SET X和COLLATE Y。</li>
+<li>如果指定了CHARACTER SET X而没有指定COLLATE Y，那么采用CHARACTER SET X和default collation校对规则。</li>
+<li>如果指定了COLLATE Y而没有指定CHARACTER SET X，那么采用同COLLATE Y相关的字符集和COLLATE Y校对规则。</li>
+<li>否则，采用表字符集和表校对规则。</li>
+</ul>
+<p><strong>字符串文字字符集和校对</strong><br>一个字符串可能有一个可选的字符集引介词和COLLATE子句： [_charset_name]’string’ [COLLATE collation_name]</p>
+<ul>
+<li>如果指定了CHARACTER SET X和COLLATE Y，那么使用CHARACTER SET X和COLLATE Y。</li>
+<li>如果指定了CHARACTER SET X而没有指定COLLATE Y，那么使用CHARACTER SET X和CHARACTER SET X的默认校对规则。</li>
+<li>否则，采用表字符集和连接校对规则。</li>
+</ul>
+<h2 id="客户端与MySQL服务器交互过程中各种字符集起作用的节点"><a href="#客户端与MySQL服务器交互过程中各种字符集起作用的节点" class="headerlink" title="客户端与MySQL服务器交互过程中各种字符集起作用的节点"></a>客户端与MySQL服务器交互过程中各种字符集起作用的节点</h2><p><strong>客户端与MySQL服务器交互过程</strong></p>
+<ol>
+<li>客户端以character_set_client字符集将请求发送给MySQL服务器，MySQL服务器将其转换为character_set_connection字符集;</li>
+<li>在进行内部数据处理前，按着字符集和校对规则将character_set_connection字符集转换为内部字符集和校对规则;</li>
+<li>将操作结果以character_set_results字符集返回给客户端。</li>
+</ol>
+<p>具体过程如下图所示:<br><img src="/img/2018/10/character_set_points.png" alt="MySQL各个字符集作用节点"></p>
+<h2 id="字符集注意的一些问题"><a href="#字符集注意的一些问题" class="headerlink" title="字符集注意的一些问题"></a>字符集注意的一些问题</h2><p><strong>乱码问题</strong><br>如果在各个阶段使用的字符集不同，那么很容易产生显示乱码或数据缺失问题(原因是各个字符集的映射关系与映射范围不同)。那么在进行操作时就应该对各种字符集进行设置。</p>
+<ul>
+<li>设置默认编码格式，对my.cnf文件进行修改，依次在修改[client]和[mysqld]<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">default-character-<span class="keyword">set</span>=utf8</span><br><span class="line">[mysqld]</span><br><span class="line"><span class="built_in">character</span>-<span class="keyword">set</span>-<span class="keyword">server</span>=utf8</span><br><span class="line"><span class="keyword">collation</span>-<span class="keyword">server</span>=utf8_general_ci</span><br></pre></td></tr></table></figure></li>
+<li>建立数据库时显式的指明所用的字符集<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> db_name</span><br><span class="line">    [[<span class="keyword">DEFAULT</span>] <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> charset_name]</span><br><span class="line">    [[<span class="keyword">DEFAULT</span>] <span class="keyword">COLLATE</span> collation_name]</span><br></pre></td></tr></table></figure></li>
+<li>建表时显式的指明所用的字符集和校对<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tbl_name (column_list)</span><br><span class="line">    [[<span class="keyword">DEFAULT</span>] <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> charset_name]</span><br><span class="line">    [<span class="keyword">COLLATE</span> collation_name]]</span><br></pre></td></tr></table></figure></li>
+<li>在PHP文件中使用<br>在php文件中使用mysql数据库时，在数据库建立连接后使用<code>mysql_query(&#39;set names utf8&#39;) ;</code>显式的设置连接的编码方式。一般情况下，中文就能正常显示了。</li>
+</ul>
+<p><strong>检查字符集一些常用命令</strong></p>
+<ul>
+<li>SHOW CHARACTER SET;</li>
+<li>SHOW COLLATION;</li>
+<li>SHOW VARIABLES LIKE ‘character%’;</li>
+<li>SHOW VARIABLES LIKE ‘collation%’;</li>
+<li>SQL函数HEX、LENGTH、CHAR_LENGTH</li>
+<li>SQL函数CHARSET、COLLATION</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料:"></a>参考资料:</h2><p>[1] <a target="_blank" rel="noopener" href="http://www.laruence.com/2008/01/05/12.html">深入MySQL字符集设置</a><br>[2] <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/refman/5.5/en/globalization.html">MySQL5.5 Manual About Globalization</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/数据库/">数据库</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/MySQL/">MySQL</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:ericvip.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java/">Java</a><small>5</small></li>
+  
+    <li><a href="/categories/数据库/">数据库</a><small>1</small></li>
+  
+    <li><a href="/categories/算法与数据结构/">算法与数据结构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/Java基础/">Java基础</a><small>5</small></li>
+  
+    <li><a href="/tags/MySQL/">MySQL</a><small>1</small></li>
+  
+    <li><a href="/tags/数据结构/">数据结构</a><small>1</small></li>
+  
+    <li><a href="/tags/算法/">算法</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="widget tag">
+    <h2 class="title">联系方式</h2>
+    <ul class="entry">
+        <li>Email: <a href="Mailto:root@ericvip.com">root@ericvip.com</a></li>
+        <li>Github: <a href="https://github.com/dreamshield/" title="eric" target="_blank">@EricZhang</a></li>
+    </ul>
+</div>
+
+  <div class="widget tag">
+    <h2 class="title">Friends</h2>
+    <ul class="entry">
+        <li><a href="http://armsword.com/" target="_blank" title="armsword">若飞</a></li>
+    </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 EricZhang
+  
+  
+    |
+<script type="text/javascript" src="https://s96.cnzz.com/z_stat.php?id=1277384850&web_id=1277384850"></script>
+
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

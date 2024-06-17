@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Eric的技术咖啡屋</title>
-  <icon>https://www.gravatar.com/avatar/7c3d9f3d0b192be7e9547b76a918403a</icon>
+  <icon>https://www.gravatar.com/avatar/8e7764432bd2e4402b45b1dcc09c40ec</icon>
   <subtitle>未来有信心，长期有耐心。</subtitle>
   <link href="https://techcoffe.com/atom.xml" rel="self"/>
   
@@ -11,7 +11,7 @@
   
   <author>
     <name>EricZhang</name>
-    <email>root@techcoffe.com</email>
+    <email>zhpf@qq.com</email>
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>

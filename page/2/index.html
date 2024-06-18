@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 2 页 | Eric的技术咖啡屋</title>
+  <meta name="author" content="EricZhang">
+  
+  <meta name="description" content="Eric的技术咖啡屋 | Java | Go | 后端开发 | 架构师">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Eric的技术咖啡屋"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Eric的技术咖啡屋" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Eric的技术咖啡屋</a></h1>
+  <h2><a href="/">未来有信心，长期有耐心。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">归档</a></li>
+    
+      <li><a href="/about">关于我</a></li>
+    
+    <li> <a href="/atom.xml">RSS</a> </li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2019-03-03T00:09:02.000Z"><a href="/2019/03/03/Java-Generic/">2019-03-03</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/03/03/Java-Generic/">Java泛型</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="泛型概述"><a href="#泛型概述" class="headerlink" title="泛型概述"></a>泛型概述</h2><p>Java 1.5发行版中增加了泛型(Generic)。在没有泛型之前，从集合中读取到的每一个对象都必须进行类型转换。如果有人不小心插入了类型错误的对象，在运行时的转换处理就会出错。有了泛型之后，可以告诉编译器每个集合中接受哪些对象类型。编译器自动地为你的插入进行转换，并在编译时告知是否插入了类型错误的对象。这样可以使程序既更加安全，也更加清楚。为了更清楚的说明以上表述，我们通过例子来看下，引入泛型前后的对比：</p>
+<ul>
+<li>避免了类型转换<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ①引入泛型之前需要对读取的内容进行类型转换</span></span><br><span class="line">List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">list.add(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">String s = (String) list.get(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ②引入泛型之后不需要进行类型转换</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">list.add(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">String s = list.get(<span class="number">0</span>);   <span class="comment">// no cast</span></span><br></pre></td></tr></table></figure></li>
+<li>错误检查前置到编译阶段<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CompareTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// ①使用泛型</span></span><br><span class="line">        Comparable&lt;Date&gt; c1 = <span class="keyword">new</span> Date();</span><br><span class="line">        System.out.println(c1.compareTo(<span class="string">&quot;red&quot;</span>)); <span class="comment">//编译错误</span></span><br><span class="line">        <span class="comment">// ②未使用泛型</span></span><br><span class="line">        Comparable c2 = <span class="keyword">new</span> Date();</span><br><span class="line">        System.out.println(c2.compareTo(<span class="string">&quot;red&quot;</span>)); <span class="comment">//运行时错误</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2019/03/03/Java-Generic/#more" class="more-link">阅读更多</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-04-23T06:31:31.000Z"><a href="/2016/04/23/Algorithm-Basic/">2016-04-23</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/04/23/Algorithm-Basic/">算法基础</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="分析算法"><a href="#分析算法" class="headerlink" title="分析算法"></a>分析算法</h2><p>分析算法的结果意味着预测算法需要的资源。虽然我们有时主要关心像内存、通信带宽或计算机硬件这些资源，但通常我们想度量的是计算时间。一般来说，通过分析求解某个问题的几种候选算法，我们可以选出一种最有效的算法。这种分析可能指出不止一个可行的候选算法，但是在这个过程中，我们往往可以抛弃几个较差的算法。一般来说，算法需要的时间与输入的规模同步增长，所以通常把一个程序的运行时间描述成其输入规模的函数。</p>
+<ul>
+<li>输入规模：输入规模的最佳概念依赖于研究的问题。对于许多问题，最自然的度量是输入中的项数，有时用两个数来描述一个算法的输入规模更为合适，如基于图的算法。</li>
+<li>运行时间：一个算法在特定输入的运行时间是指执行的基本操作数或步数。其中步数，采用以下观点，执行每一行代码需要常量执行时间。
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/04/23/Algorithm-Basic/#more" class="more-link">阅读更多</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-02-09T02:34:20.000Z"><a href="/2015/02/09/MySQL-Character-Sets/">2015-02-09</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/09/MySQL-Character-Sets/">MySQL字符集的理解</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>字符(symbles)：人类语言的最小单位(不知道这样理解对不对，语言学的朋友请更正)</li>
+<li>编码(encoding)：对给定的字符进行赋值或者说是建立一种映射关系。可以理解为一个过程,也可以理解为一个结果。例如：给定字符’A’和B’，我们给字符’A’和’B’各赋一个值，即有如下对应关系’A’=&gt;0, ‘B’=&gt;1。我们就说0是字符’A’的编码，1是字符’B’的编码。</li>
+<li>字符集(character set)：字符和编码的集合(映射关系的集合)称为字符集。比如字符’A’和’B’同他们对应的编码组成的集合就是一个字符集。{‘A’=&gt;0, ‘B’=&gt;1}</li>
+<li>校对规则(collation)：字符集中各个字符之间的比较与排列次序和方法。若果我们想比较字符串”A”和字符串”B”的大小。最简单的方法就是比较字符’A’和’字符B’对应编码的大小。比如上面的字符’B’的编码1大于字符’A’的编码0，我们就说字符串”A”大于字符串”B”。这中是最简单的一种校对规则，被称之为binary collation。其他复杂的校对规则原理与其类似，比如不去分字符的大小写等。<br>注：每一个校对规则都对应者一个字符集，而每个字符集可以对应多个校对规则。
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/02/09/MySQL-Character-Sets/#more" class="more-link">阅读更多</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+<nav id="pagination">
+  
+    <a href="/" class="alignleft prev">上一页</a>
+  
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:techcoffe.com">
+  </form>
+</div>
+
+  <div class="widget">
+    <h2 class="title">联系方式</h2>
+    <ul class="entry">
+        <li>Email: <a href="Mailto:zhpf@qq.com">zhpf@qq.com</a></li>
+        <li>Github: <a href="https://github.com/dreamshield/" title="eric" target="_blank">@EricZhang</a></li>
+    </ul>
+</div>
+
+  
+<div class="widget category">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java基础/">Java基础</a><small>5</small></li>
+  
+    <li><a href="/categories/数据库/">数据库</a><small>1</small></li>
+  
+    <li><a href="/categories/算法与数据结构/">算法与数据结构</a><small>1</small></li>
+  
+    <li><a href="/categories/设计模式/">设计模式</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+  <div class="widget archive">
+    <h3 class="title">年度汇总</h3>
+    <div class="entry">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/">2015</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2024 EricZhang
+  
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

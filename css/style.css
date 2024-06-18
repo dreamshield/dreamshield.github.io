@@ -607,15 +607,32 @@ article footer .addthis iframe {
 #sidebar .search input:focus {
   color: #1a1a1a;
 }
+#sidebar .archive small,
+#sidebar .category small,
 #sidebar .tag small {
   margin-left: 15px;
   color: #999;
 }
+#sidebar .archive small:before,
+#sidebar .category small:before,
 #sidebar .tag small:before {
   content: '(';
 }
+#sidebar .archive small:after,
+#sidebar .category small:after,
 #sidebar .tag small:after {
   content: ')';
+}
+#sidebar .archive-list-count {
+  padding-left: 5px;
+  color: #999;
+  font-size: 0.85em;
+}
+#sidebar .archive-list-count:before {
+  content: "(";
+}
+#sidebar .archive-list-count:after {
+  content: ")";
 }
 #sidebar .twitter li {
   border-bottom: 1px solid #ddd;

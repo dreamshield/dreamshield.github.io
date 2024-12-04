@@ -12,7 +12,7 @@ body {
   background: #f8f8f8;
   color: #1a1a1a;
   font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   text-shadow: 0 0 1px transparent;
 }
 @media screen and (max-width: 1260px) {
@@ -44,7 +44,7 @@ h3 {
 }
 a {
   text-decoration: none;
-  color: #000;
+  color: #258fb8;
 }
 a:hover {
   text-decoration: underline;
@@ -108,10 +108,11 @@ a:hover {
   color: #258fb8;
 }
 #header a:hover {
+  color: #258fb8;
   text-decoration: none;
 }
 #header h1 {
-  font-weight: 500;
+  font-weight: bolder;
   font-size: 2.5em;
   line-height: 1;
 }
@@ -238,7 +239,7 @@ article header .icon {
   position: absolute;
   top: 20px;
   left: 20px;
-  color: #000;
+  color: #258fb8;
 }
 @media screen and (max-width: 600px) {
   article header .icon {
@@ -270,7 +271,7 @@ article header .title a {
   color: #1a1a1a;
 }
 article header .title a:hover {
-  color: #000;
+  color: #258fb8;
   text-decoration: none;
 }
 article .entry {
@@ -290,6 +291,30 @@ article .entry h5,
 article .entry h6,
 article .entry .video-container {
   margin-top: 15px;
+}
+article .entry table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  border: 1px solid #e2e2e2;
+  width: 100%;
+}
+article .entry table th {
+  white-space: nowrap;
+  color: #1a1a1a;
+  font-weight: 600;
+  background: #eee;
+}
+article .entry table td,
+article .entry table th {
+  border: 1px solid #e2e2e2;
+  padding: 8px 16px;
+  text-align: left;
+}
+article .entry figure.highlight table {
+  border: none;
+  width: auto;
+  border-collapse: separate;
 }
 article .entry blockquote {
   border-left: 3px solid #d3d3d3;
@@ -357,16 +382,16 @@ article .entry dl dl {
   margin-top: 0;
 }
 article .entry h1,
-article .entry h2 {
+article .entry h2,
+article .entry h3 {
   font-weight: bolder;
   padding-bottom: 0px;
   margin-top: 10px;
 }
-article .entry h3,
 article .entry h4,
 article .entry h5,
 article .entry h6 {
-  font-weight: bolder;
+  font-weight: normal;
 }
 article .entry em {
   background-color: #ffeb3b;
@@ -436,7 +461,7 @@ article footer a {
   color: #999;
 }
 article footer a:hover {
-  color: #000;
+  color: #258fb8;
   text-decoration: none;
 }
 article footer a:before {
@@ -471,12 +496,6 @@ article footer .tags:before {
   top: 3px;
   left: 2px;
 }
-article footer .addthis {
-  margin-top: 15px;
-}
-article footer .addthis iframe {
-  margin-top: 0;
-}
 #comment {
   padding: 20px;
   background: #fff;
@@ -496,7 +515,7 @@ article footer .addthis iframe {
   margin-bottom: 50px;
 }
 #pagination a:hover {
-  background: #000;
+  background: #258fb8;
   color: #fff;
   text-decoration: none;
   text-shadow: none;
@@ -544,6 +563,13 @@ article footer .addthis iframe {
     float: none;
     width: 100%;
   }
+}
+#sidebar a {
+  color: #000;
+}
+#sidebar a:hover {
+  color: #258fb8;
+  text-decoration: none;
 }
 #sidebar .widget {
   background: #fff;
@@ -597,32 +623,18 @@ article footer .addthis iframe {
 #sidebar .search input:focus {
   color: #1a1a1a;
 }
-#sidebar .archive small,
-#sidebar .category small,
+#sidebar .archive-list-count,
 #sidebar .tag small {
   margin-left: 15px;
   color: #999;
 }
-#sidebar .archive small:before,
-#sidebar .category small:before,
+#sidebar .archive-list-count:before,
 #sidebar .tag small:before {
   content: '(';
 }
-#sidebar .archive small:after,
-#sidebar .category small:after,
+#sidebar .archive-list-count:after,
 #sidebar .tag small:after {
   content: ')';
-}
-#sidebar .archive-list-count {
-  padding-left: 5px;
-  color: #999;
-  font-size: 0.85em;
-}
-#sidebar .archive-list-count:before {
-  content: "(";
-}
-#sidebar .archive-list-count:after {
-  content: ")";
 }
 #sidebar .twitter li {
   border-bottom: 1px solid #ddd;
@@ -685,10 +697,10 @@ article footer .addthis iframe {
   font-size: 100%;
 }
 .entry .gist .gist-file .gist-meta a {
-  color: #000;
+  color: #258fb8;
 }
 .entry .gist .gist-file .gist-meta a:visited {
-  color: #000;
+  color: #258fb8;
 }
 figure.highlight {
   background: #eee;
@@ -722,17 +734,23 @@ figure.highlight table {
 }
 figure.highlight .gutter {
   color: #999;
+  padding: 0;
   padding-right: 15px;
+  border: 0;
   border-right: 1px solid #ddd;
   text-align: right;
 }
 figure.highlight .code {
   padding-left: 15px;
+  border: 0;
   border-left: 1px solid #fff;
   color: #666;
 }
 figure.highlight .line {
   height: 20px;
+}
+figure.highlight .line.marked {
+  background: #d6d6d6;
 }
 pre .comment,
 pre .template_comment,

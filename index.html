@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   
@@ -7,7 +7,6 @@
   <meta name="author" content="EricZhang">
   
   <meta name="description" content="Eric的技术咖啡屋 | Java | Go | 后端开发 | 架构师">
-  
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -18,12 +17,14 @@
     <meta property="og:image" content=""/>
   
 
-  <link href="/favicon.png" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="Eric的技术咖啡屋" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
-  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/favicon.png">
   
+    <link rel="alternate" href="/atom.xml" title="Eric的技术咖啡屋" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
 <meta name="generator" content="Hexo 5.4.2"></head>
 
 
@@ -49,66 +50,43 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
-  <article class="post">
+  <article id="post-Design-Pattern-of-Factory" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
     <header>
       
         <div class="icon"></div>
-        <time datetime="2019-05-30T00:25:54.000Z"><a href="/2019/05/30/Volatile-and-Final-in-Java/">2019-05-30</a></time>
+        <time class="dt-published" datetime="2024-06-25T08:23:42.000Z"><a href="/2024/06/25/Design-Pattern-of-Factory/">2024-06-25</a></time>
       
       
   
-    <h1 class="title"><a href="/2019/05/30/Volatile-and-Final-in-Java/">Java中的volatile与final</a></h1>
+    <h1 class="title"><a href="/2024/06/25/Design-Pattern-of-Factory/">设计模式之工厂模式</a></h1>
   
 
     </header>
-    <div class="entry">
+    <div class="e-content entry" itemprop="articleBody">
       
-        <p>Java在并发并发编程中，实现各个线程之间的安全可靠通信中，volatile、synchronized与final这三个原语起到了关键作用。可以说是Java在语言层面实现并发编程线程安全的基石。其中volatile与final更是基础中的基础，本文记录笔者在学习关于这部分一些整理。</p>
-<h2 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h2><p>Java语言中的volatile变量可以被看作是一种“程度较轻的synchronized”；与synchronized块相比，volatile变量所需的编码较少，并且运行时开销也较少，但是它所能实现的功能也仅是synchronized的一部分。当声明共享变量为volatile变量时，对这个变量的读、写将会变得很特别。特别之处主要体现在两个方面：其自身特性与其对内存可见性的影响。</p>
+        <p>工厂模式是创建型模式的一种。通过提供创建对象的接口，而不是直接创建对象实例，使得代码更具扩展性和灵活性。根据对象创建的不同场景，工厂模式可以分为三类：简单工厂模式、工厂方法模式和抽象工厂模式。</p>
+<h2 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h2><p>简单工厂模式通过一个单一的工厂类，根据不同参数，创建并返回不同的实例对象。通过简单工厂模式，可以将对象的创建逻辑封装起来，提供统一的接口给客户端使用，简化了客户端的代码复杂度，提高了代码的可维护性。</p>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><ul>
+<li>需要创建的对象较少<blockquote>
+<p>当需要创建的对象较少时，可以考虑使用简单工厂模式来管理对象的创建过程。</p>
+</blockquote>
+</li>
+<li>对象的创建逻辑复杂<blockquote>
+<p>将对象的创建逻辑集中在一个工厂类中，可以简化客户端的代码，提高代码的可维护性。</p>
+</blockquote>
+</li>
+<li>不需要延迟创建对象<blockquote>
+<p>对象创建的逻辑在一个具体的工厂类中实现，对象的创建过程不需要延迟到子类中。</p>
+</blockquote>
       
     </div>
     <footer>
       
         
           <div class="alignleft">
-            <a href="/2019/05/30/Volatile-and-Final-in-Java/#more" class="more-link">阅读更多</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2019-05-07T14:47:15.000Z"><a href="/2019/05/07/Cache-Consistency/">2019-05-07</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2019/05/07/Cache-Consistency/">缓存一致性</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>本文是对最近学习Java内存模型有关的内容进行的总结，该部分只包括处理器层缓存一致性相关的内容。这部分内容是更好的理解Java内存模型的前提。关于Java语言层内存模型相关的内容放到下一篇文章记录整理。</p>
-<h2 id="处理器系统组织方式"><a href="#处理器系统组织方式" class="headerlink" title="处理器系统组织方式"></a>处理器系统组织方式</h2><p>多处理器系统存在多种组织方式，可以分为共享存储结构和非共享存储结构。对系统内存进行统一编址，进程可以直接访问本地节点和其他节点主存中的数据。非共享存储结构也可以共享主存，但是对于非本地节点的主存不能直接访问，需通过软件辅助间接访问，时间开销较大。共享存储的多处理器系统还可以分为集中式共享存储结构和分布式共享存储结构。其中集中式共享存储结构又称为均匀访存延迟的存储结构(UMA)，又可分为并行向量处理机(PVP)和对称多处理器系统(SMP)。分布式共享存储结构包括非均匀访存延迟的存储结构(NUMA)和无远程访问结构(NORMA)。下图对以上分类进行了总结：</p>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2019/05/07/Cache-Consistency/#more" class="more-link">阅读更多</a>
+            <a href="/2024/06/25/Design-Pattern-of-Factory/#more" class="more-link">阅读更多</a>
           </div>
         
         
@@ -129,9 +107,10 @@
   <div class="search">
   <form action="//google.com/search" method="get" accept-charset="utf-8">
     <input type="search" name="q" results="0" placeholder="搜索">
-    <input type="hidden" name="q" value="site:techcoffe.com">
+    <input type="hidden" name="as_sitesearch" value="techcoffe.com">
   </form>
 </div>
+
 
   <div class="widget">
     <h2 class="title">联系方式</h2>
@@ -142,24 +121,27 @@
 </div>
 
   
-<div class="widget category">
+<div class="widget tag">
   <h3 class="title">分类</h3>
   <ul class="entry">
   
-    <li><a href="/categories/Java基础/">Java基础</a><small>2</small></li>
+    <li><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><small>1</small></li>
   
   </ul>
 </div>
 
 
   
-  <div class="widget archive">
+  <div class="widget widget-archives">
     <h3 class="title">年度汇总</h3>
     <div class="entry">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
+
+
+  
 </aside>
     <div class="clearfix"></div>
   </div>
@@ -167,19 +149,28 @@
   
   &copy; 2024 EricZhang
   
-  
 </div>
 <div class="clearfix"></div></footer>
-  <script src="/js/jquery.min.js"></script>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
 <script src="/js/jquery.imagesloaded.min.js"></script>
+
+
 <script src="/js/gallery.js"></script>
 
 
 
 
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
 <script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
+
+<script>
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);

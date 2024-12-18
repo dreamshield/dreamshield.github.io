@@ -130,6 +130,13 @@ div {
   margin-bottom: 30px;
   /* tiered display categories */
 }
+#sidebar .widget a {
+  line-height: 1.5;
+  padding: 5px;
+}
+#sidebar .widget a:hover {
+  color: #48a0f0;
+}
 #sidebar .widget .widget-title {
   color: #6E7173;
   line-height: 2.7;
@@ -150,10 +157,6 @@ div {
 }
 #sidebar .widget .tagcloud {
   margin-top: 10px;
-}
-#sidebar .widget .tagcloud a {
-  line-height: 1.5;
-  padding: 5px;
 }
 #sidebar .widget ul {
   list-style: none;
@@ -976,7 +979,7 @@ pre {
 }
 .readmore a:hover {
   background: #F8F8F8;
-  border-bottom-color: #D26911;
+  border-color: #48a0f0;
 }
 
 /* syntax highlight*/

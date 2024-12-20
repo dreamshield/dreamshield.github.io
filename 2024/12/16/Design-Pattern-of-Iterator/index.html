@@ -45,11 +45,11 @@ html.dataset.dark = localStorage.dark;
 <td>使用聚合与迭代器完成业务需要的遍历逻辑。</td>
 </tr>
 </tbody></table>
-<p>迭代器模式的实现关键在于，实现Iterator与IAggregate中的关键方法：</p>
+<p>迭代器模式的关键在于实现Iterator与IAggregate中的关键方法：</p>
 <ul>
 <li>Iterator接口：<ul>
-<li>hasNext：用于判断是否还有下一个元素。</li>
-<li>next：获取下一个元素。</li>
+<li>boolean hasNext()：用于判断是否还有下一个元素。</li>
+<li>E next()：获取下一个元素。</li>
 </ul>
 </li>
 <li>IAggregate接口：<ul>
